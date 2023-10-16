@@ -1,0 +1,29 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres:13.2
+    container_name: fast_app_db
+    restart: always
+    env_file:
+      - ./.env.db
+
+    volumes:
+      - pg_data1:/var/lib/postgresql/data/
+  app:
+    build: .
+    command: python main.py
+    container_name: fast_app
+    restart: always
+    ports:
+      - '${SERVER_PORT}:${SERVER_PORT}'
+    volumes:
+      - ./:/app
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+
+volumes:
+  pg_data1:
+
